@@ -1,275 +1,562 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>San Valentín Quiz 💘</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>San Valentín Quiz 💘</title>
+  <style>
+    :root{
+      --bg1:#fff0f6;
+      --bg2:#ffe4ee;
+      --card:#ffffffcc;
+      --text:#2b1b22;
+      --muted:#6b4a5a;
+      --accent:#ff3b7a;
+      --accent2:#ff7aa8;
+      --good:#1f9d61;
+      --bad:#d64545;
+      --shadow: 0 12px 40px rgba(0,0,0,.12);
+      --radius: 22px;
+    }
 
-<style>
-body{
-  margin:0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: linear-gradient(135deg,#ffe6f0,#fff);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-}
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1000px 600px at 20% 10%, var(--bg2), transparent 60%),
+                  radial-gradient(900px 700px at 80% 20%, #ffe9f2, transparent 55%),
+                  linear-gradient(180deg, var(--bg1), #fff);
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 14px;
+    }
 
-.container{
-  background:white;
-  width:90%;
-  max-width:600px;
-  padding:25px;
-  border-radius:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.15);
-  text-align:center;
-}
+    .wrap{
+      width: min(860px, 100%);
+      display:grid;
+      gap: 14px;
+    }
 
-h1{
-  color:#ff2e74;
-}
+    .hero{
+      background: linear-gradient(135deg, #ffffffdd, #fff7fbdd);
+      border: 1px solid #ffffff;
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 18px 18px 14px;
+      position: relative;
+      overflow:hidden;
+    }
 
-.question{
-  font-size:20px;
-  margin:20px 0;
-}
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:-40px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,59,122,.16), transparent 35%),
+        radial-gradient(circle at 80% 35%, rgba(255,122,168,.14), transparent 35%),
+        radial-gradient(circle at 60% 85%, rgba(255,59,122,.10), transparent 40%);
+      filter: blur(2px);
+      pointer-events:none;
+    }
 
-button{
-  margin:8px;
-  padding:10px 18px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:bold;
-  transition:0.3s;
-}
+    .hero-inner{ position: relative; display:flex; align-items:flex-start; justify-content:space-between; gap: 14px; }
+    .title{
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      flex-wrap: wrap;
+    }
+    .badge{
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display:grid;
+      place-items:center;
+      color:white;
+      font-size: 20px;
+      box-shadow: 0 10px 22px rgba(255,59,122,.25);
+      user-select:none;
+    }
+    h1{
+      margin:0;
+      font-size: 22px;
+      letter-spacing: .2px;
+      line-height: 1.1;
+    }
+    .sub{
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 52ch;
+    }
 
-.true{
-  background:#d4ffe5;
-}
+    .meta{
+      display:flex;
+      flex-direction: column;
+      align-items:flex-end;
+      gap: 8px;
+      min-width: 190px;
+    }
 
-.false{
-  background:#ffd6d6;
-}
+    .progress{
+      width: 190px;
+      height: 10px;
+      background: rgba(0,0,0,.06);
+      border-radius: 999px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.8);
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 999px;
+      transition: width .35s ease;
+    }
+    .counter{
+      font-size: 12px;
+      color: var(--muted);
+      user-select:none;
+    }
 
-.special{
-  background:#ffe0f5;
-}
+    .card{
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,.9);
+      box-shadow: var(--shadow);
+      border-radius: var(--radius);
+      padding: 18px;
+    }
 
-button:hover{
-  transform:scale(1.05);
-}
+    .q-title{
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: var(--muted);
+      letter-spacing: .2px;
+    }
 
-.feedback{
-  margin-top:15px;
-  font-weight:bold;
-  display:none;
-}
+    .question{
+      margin: 0 0 16px;
+      font-size: 22px;
+      line-height: 1.25;
+    }
 
-.end{
-  display:none;
-}
+    .answers{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-.score{
-  font-size:32px;
-  margin:10px 0;
-}
-</style>
+    button{
+      border:0;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 700;
+      cursor:pointer;
+      transition: transform .08s ease, filter .18s ease, box-shadow .18s ease, background .18s ease;
+      user-select:none;
+    }
+    button:active{ transform: translateY(1px) scale(.99); }
+
+    .btn{
+      background: white;
+      color: var(--text);
+      border: 1px solid rgba(0,0,0,.08);
+      box-shadow: 0 10px 18px rgba(0,0,0,.07);
+    }
+    .btn:hover{ filter: brightness(.99); box-shadow: 0 14px 22px rgba(0,0,0,.10); }
+
+    .btn-true{
+      background: linear-gradient(135deg, #e9fff3, #ffffff);
+      border: 1px solid rgba(31,157,97,.22);
+    }
+    .btn-false{
+      background: linear-gradient(135deg, #fff1f1, #ffffff);
+      border: 1px solid rgba(214,69,69,.22);
+    }
+    .btn-special{
+      background: linear-gradient(135deg, #fff, #ffeaf2);
+      border: 1px solid rgba(255,59,122,.22);
+    }
+
+    .feedback{
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,.06);
+      background: rgba(255,255,255,.65);
+      color: var(--text);
+      display:none;
+      animation: pop .22s ease-out;
+    }
+    @keyframes pop{
+      from{ transform: translateY(4px); opacity: .0;}
+      to{ transform: translateY(0); opacity: 1;}
+    }
+
+    .feedback.good{ border-color: rgba(31,157,97,.25); }
+    .feedback.bad{ border-color: rgba(214,69,69,.25); }
+
+    .mini{
+      margin-top: 10px;
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pill{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.08);
+      background: rgba(255,255,255,.65);
+    }
+
+    .end{
+      text-align:center;
+      display:none;
+      padding: 20px 16px;
+    }
+    .score{
+      font-size: 42px;
+      margin: 8px 0 6px;
+      letter-spacing: -1px;
+    }
+    .msg{
+      font-size: 16px;
+      color: var(--muted);
+      margin: 0 auto;
+      max-width: 60ch;
+      line-height: 1.5;
+    }
+
+    .cta-row{
+      margin-top: 16px;
+      display:flex;
+      justify-content:center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .restart{
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 14px 26px rgba(255,59,122,.26);
+    }
+    .restart:hover{ filter: brightness(1.02); }
+
+    .tiny{
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+  </style>
 </head>
-
 <body>
+  <div class="wrap">
 
-<div class="container">
+    <section class="hero">
+      <div class="hero-inner">
+        <div>
+          <div class="title">
+            <div class="badge">💘</div>
+            <div>
+              <h1>Quiz de San Valentín (para mi novio)</h1>
+              <p class="sub">Contesta Verdadero o Falso… y demuestra que tú sí estabas poniendo atención 😌</p>
+            </div>
+          </div>
+        </div>
 
-<h1>Quiz de San Valentín 💘</h1>
+        <div class="meta">
+          <div class="progress" aria-label="progreso">
+            <div class="bar" id="bar"></div>
+          </div>
+          <div class="counter" id="counter">Pregunta 1 / 10</div>
+        </div>
+      </div>
+    </section>
 
-<div id="quiz">
+    <section class="card" id="quizCard">
+      <div class="q-title" id="qTitle">Pregunta 1</div>
+      <div class="question" id="questionText">...</div>
 
-<div class="question" id="questionText"></div>
-<div id="answers"></div>
-<div class="feedback" id="feedback"></div>
+      <div class="answers" id="answers"></div>
 
-</div>
+      <div class="feedback" id="feedback"></div>
 
-<div class="end" id="endScreen">
-  <div class="score" id="finalScore"></div>
-  <p id="finalMessage"></p>
-</div>
+      <div class="mini">
+        <div class="pill" id="scorePill">Puntos: 0</div>
+        <div class="pill" id="hintPill">Tip: Si dudas… piensa en mí 👀</div>
+      </div>
+    </section>
 
-</div>
+    <section class="card end" id="endCard">
+      <div style="font-size:34px;">💝</div>
+      <div class="score" id="finalScore">0/10</div>
+      <p class="msg" id="finalMsg"></p>
 
-<script>
+      <div class="cta-row">
+        <button class="restart" id="restartBtn">Repetir el quiz</button>
+        <button class="btn" id="reviewBtn">Ver respuestas</button>
+      </div>
 
-const quiz = [
-{
-text:"Nuestra primera cita fue el 19 de julio 2023",
-options:[
-{label:"Verdadero",value:true},
-{label:"Falso",value:false}
-],
-correct:false,
-explainCorrect:"Falso 😌 Fue el 19 de junio 2023 a ver una peli.",
-explainWrong:"Nooo 😭 Fue el 19 de junio 2023."
-},
-{
-text:"La primera película que vimos fue The Flash",
-options:[
-{label:"Verdadero",value:true},
-{label:"Falso",value:false}
-],
-correct:true,
-explainCorrect:"Verdadero ✅ Cinema era.",
-explainWrong:"Sí fue The Flash 😭"
-},
-{
-text:"Cuando me guardaste el número me pusiste Ailin B",
-options:[
-{label:"Verdadero",value:true},
-{label:"Falso",value:false}
-],
-correct:false,
-explainCorrect:"Falso 😌 Fue como Eileen B.",
-explainWrong:"Fue Eileen B 😭"
-},
-{
-text:"Nuestra canción es I Wanna Be Yours de Arctic Monkeys",
-options:[
-{label:"Verdadero",value:true},
-{label:"Falso",value:false}
-],
-correct:false,
-explainCorrect:"Falso 💫 Es ALALUZ de Pororo.",
-explainWrong:"Es ALALUZ 😌"
-},
-{
-text:"Hasta hoy tenemos juntos 879 días",
-options:[
-{label:"Verdadero",value:true},
-{label:"Falso",value:false}
-],
-correct:true,
-explainCorrect:"Verdadero 💘 879 días y contando.",
-explainWrong:"Era verdadero 😭"
-},
-{
-text:"Aileen es muy celosa",
-options:[
-{label:"Verdadero",value:true},
-{label:"Falso",value:false}
-],
-correct:true,
-explainCorrect:"Verdadero 😌 y con razón.",
-explainWrong:"Ajá… claro 😂"
-},
-{
-text:"La cita en The Kitche fue de pastas italianas",
-options:[
-{label:"Verdadero",value:true},
-{label:"Falso",value:false}
-],
-correct:false,
-explainCorrect:"Falso 😌 Fue de risottos.",
-explainWrong:"Fue risottooo 😭"
-},
-{
-text:"Nuestro reality favorito es Singles Inferno",
-options:[
-{label:"Verdadero",value:true},
-{label:"Falso",value:false}
-],
-correct:true,
-explainCorrect:"Verdadero 🔥 y muchos más.",
-explainWrong:"Sí es Singles Inferno 😌"
-},
-{
-text:"La primera discusión fuerte fue por Punta Cana",
-options:[
-{label:"Verdadero",value:true},
-{label:"Falso",value:false}
-],
-correct:false,
-explainCorrect:"Falso 😌 Fue Bayahibe.",
-explainWrong:"Fue Bayahibe 😭"
-},
-{
-text:"Aileen te ama mucho",
-options:[
-{label:"Verdadero",value:"true"},
-{label:"Verdaderísimo",value:"truest"}
-],
-correct:["true","truest"],
-explainCorrect:"VERDADERÍSIMO 💘",
-explainWrong:"Esa era la más fácil 😭"
-}
-];
+      <div class="tiny" id="reviewArea" style="display:none;"></div>
+    </section>
 
-let index=0;
-let score=0;
+  </div>
 
-const questionText=document.getElementById("questionText");
-const answersDiv=document.getElementById("answers");
-const feedback=document.getElementById("feedback");
-const endScreen=document.getElementById("endScreen");
-const finalScore=document.getElementById("finalScore");
-const finalMessage=document.getElementById("finalMessage");
+  <script>
+    const quiz = [
+      {
+        text: '“Nuestra primera cita fue el 19 de julio 2023”',
+        options: [
+          { label: "Verdadero", value: true },
+          { label: "Falso", value: false }
+        ],
+        correct: false,
+        explainCorrect: "Falso 😌 Fue el 19 de junio 2023… a ver una peli. Histórico.",
+        explainWrong: "Noooo 😭 Fue el 19 de junio 2023, a ver una peli. ¡Cómo así!"
+      },
+      {
+        text: '“La primera película que vimos fue The Flash”',
+        options: [
+          { label: "Verdadero", value: true },
+          { label: "Falso", value: false }
+        ],
+        correct: true,
+        explainCorrect: "Verdadero ✅ The Flash, tú y yo… cinema era.",
+        explainWrong: "Ehh no 😭 Sí fue The Flash. Te falta replay de recuerdos."
+      },
+      {
+        text: '“Cuando me guardaste el número dijiste que me ibas a guardar como ‘Ailin B’ hasta que empezara a confiar más”',
+        options: [
+          { label: "Verdadero", value: true },
+          { label: "Falso", value: false }
+        ],
+        correct: false,
+        explainCorrect: "Falso 😌 Fue como “Eileen B”. Close enough, pero no.",
+        explainWrong: "Casi… pero no 😭 Fue “Eileen B”."
+      },
+      {
+        text: '“Nuestra canción es ‘I Wanna Be Yours’ de Arctic Monkeys”',
+        options: [
+          { label: "Verdadero", value: true },
+          { label: "Falso", value: false }
+        ],
+        correct: false,
+        explainCorrect: "Falso 💫 Es ‘ALALUZ’ de Pororo. Sí. Pororo. Respeta.",
+        explainWrong: "Nope 😭 Es ‘ALALUZ’ de Pororo. No es negociable."
+      },
+      {
+        text: '“Hasta hoy tenemos juntos 879 días”',
+        options: [
+          { label: "Verdadero", value: true },
+          { label: "Falso", value: false }
+        ],
+        correct: true,
+        explainCorrect: "Verdadero ✅ 879 días y contando… y tú conmigo.",
+        explainWrong: "Uff no 😭 Eso era VERDADERO: 879 días. Ponte al día, bebé."
+      },
+      {
+        text: '“Aileen es muy celosa”',
+        options: [
+          { label: "Verdadero", value: true },
+          { label: "Falso", value: false }
+        ],
+        correct: true,
+        explainCorrect: "Verdadero 😌 Y con razón. (Mentira… ¿o no? 👀)",
+        explainWrong: "Falso??? 😂 Ajá… claro. Díselo a mi cara con seguridad."
+      },
+      {
+        text: '“La cita que tuvimos en The Kitche fue de pastas italianas”',
+        options: [
+          { label: "Verdadero", value: true },
+          { label: "Falso", value: false }
+        ],
+        correct: false,
+        explainCorrect: "Falso ✅ Fue de risottos. Clase, elegancia y arroz.",
+        explainWrong: "Nope 😭 Fue de risottos, no de pastas. Aprende tu lore."
+      },
+      {
+        text: '“Nuestro reality favorito es Singles Inferno”',
+        options: [
+          { label: "Verdadero", value: true },
+          { label: "Falso", value: false }
+        ],
+        correct: true,
+        explainCorrect: "Verdadero ✅ Y muchos más… pero ese es top tier.",
+        explainWrong: "Ehhh no 😭 Sí es Singles Inferno (y muchos más)."
+      },
+      {
+        text: '“La primera vez que discutimos fuerte fue cuando te fuiste a Punta Cana y me dejaste sola”',
+        options: [
+          { label: "Verdadero", value: true },
+          { label: "Falso", value: false }
+        ],
+        correct: false,
+        explainCorrect: "Falso ✅ Fue para Bayahibe. Ajá. Bayahibe.",
+        explainWrong: "Nope 😭 Fue para Bayahibe, no Punta Cana."
+      },
+      {
+        text: '“Aileen te ama mucho”',
+        options: [
+          { label: "Verdadero", value: "true" },
+          { label: "Verdaderísimo", value: "truest" }
+        ],
+        correct: ["true","truest"],
+        explainCorrect: "VERDADERÍSIMO 💘 (Aquí solo hay una respuesta correcta: sí.)",
+        explainWrong: "Imposible 😭 Esa era la más fácil. Intenta otra vez."
+      }
+    ];
 
-function loadQuestion(){
-feedback.style.display="none";
-feedback.textContent="";
-answersDiv.innerHTML="";
+    // UI refs
+    const qTitle = document.getElementById("qTitle");
+    const questionText = document.getElementById("questionText");
+    const answersDiv = document.getElementById("answers");
+    const feedback = document.getElementById("feedback");
+    const scorePill = document.getElementById("scorePill");
+    const counter = document.getElementById("counter");
+    const bar = document.getElementById("bar");
 
-let q=quiz[index];
-questionText.textContent=q.text;
+    const quizCard = document.getElementById("quizCard");
+    const endCard = document.getElementById("endCard");
+    const finalScore = document.getElementById("finalScore");
+    const finalMsg = document.getElementById("finalMsg");
+    const restartBtn = document.getElementById("restartBtn");
+    const reviewBtn = document.getElementById("reviewBtn");
+    const reviewArea = document.getElementById("reviewArea");
 
-q.options.forEach(opt=>{
-let btn=document.createElement("button");
-btn.textContent=opt.label;
+    let idx = 0;
+    let score = 0;
+    let picks = [];
 
-if(opt.label==="Verdadero") btn.classList.add("true");
-else if(opt.label==="Falso") btn.classList.add("false");
-else btn.classList.add("special");
+    function isCorrect(question, pickedValue){
+      if (Array.isArray(question.correct)) {
+        return question.correct.includes(pickedValue);
+      }
+      return question.correct === pickedValue;
+    }
 
-btn.onclick=()=>checkAnswer(opt.value);
-answersDiv.appendChild(btn);
-});
-}
+    function render(){
+      const total = quiz.length;
+      const q = quiz[idx];
 
-function checkAnswer(value){
-let q=quiz[index];
-let correct=Array.isArray(q.correct)?
-q.correct.includes(value):
-q.correct===value;
+      qTitle.textContent = `Pregunta ${idx + 1}`;
+      questionText.textContent = q.text;
 
-if(correct) score++;
+      answersDiv.innerHTML = "";
+      feedback.style.display = "none";
+      feedback.className = "feedback";
 
-feedback.style.display="block";
-feedback.textContent=correct?q.explainCorrect:q.explainWrong;
+      // progress
+      counter.textContent = `Pregunta ${idx + 1} / ${total}`;
+      bar.style.width = `${(idx / total) * 100}%`;
 
-setTimeout(()=>{
-index++;
-if(index<quiz.length){
-loadQuestion();
-}else{
-showResult();
-}
-},4000);  // ⬅️ AHORA DURA 4 SEGUNDOS
-}
+      q.options.forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.className = "btn";
+        // style by label
+        const lab = opt.label.toLowerCase();
+        if (lab.includes("verdaderísimo")) btn.classList.add("btn-special");
+        else if (lab.includes("verdadero")) btn.classList.add("btn-true");
+        else btn.classList.add("btn-false");
 
-function showResult(){
-document.getElementById("quiz").style.display="none";
-endScreen.style.display="block";
+        btn.textContent = opt.label;
+        btn.addEventListener("click", () => handleAnswer(opt.value));
+        answersDiv.appendChild(btn);
+      });
 
-finalScore.textContent=score+" / "+quiz.length;
+      scorePill.textContent = `Puntos: ${score}`;
+    }
 
-finalMessage.textContent=
-"Feliz San Valentín mi amor 💘 Espero tener muchísimos más contigo.";
-}
+    function handleAnswer(value){
+      const q = quiz[idx];
+      const ok = isCorrect(q, value);
 
-loadQuestion();
+      picks.push({ index: idx, picked: value, correct: ok });
 
-</script>
+      if (ok) score++;
 
+      // show feedback
+      feedback.style.display = "block";
+      feedback.classList.add(ok ? "good" : "bad");
+      feedback.textContent = ok ? q.explainCorrect : q.explainWrong;
+
+      // lock buttons
+      [...answersDiv.querySelectorAll("button")].forEach(b => b.disabled = true);
+
+      // next after a beat
+      setTimeout(() => {
+        idx++;
+        if (idx >= quiz.length) finish();
+        else render();
+      },4500);
+    }
+
+    function finish(){
+      const total = quiz.length;
+      bar.style.width = "100%";
+
+      quizCard.style.display = "none";
+      endCard.style.display = "block";
+
+      finalScore.textContent = `${score}/${total}`;
+
+      // cute/sassy ending messages
+      let vibe = "";
+      if (score === total) vibe = "PERFECTO 😭💘 Ok tú sí eres mi novio oficialmente oficial.";
+      else if (score >= 8) vibe = "Muy bien 😌💞 Casi perfecto. Te dejo un besito extra por el esfuerzo.";
+      else if (score >= 5) vibe = "Bueno… aceptable 😅💗 Pero te toca invitarme un postre para compensar.";
+      else vibe = "Ajá… 😭💔 Necesitamos una sesión intensiva de recuerdos (con cuddle incluido).";
+
+      finalMsg.textContent =
+        `${vibe}\n\nFeliz San Valentín, mi amor. Espero tener muchísimos más contigo. 💝`;
+
+      scorePill.textContent = `Puntos: ${score}`;
+
+      // build review
+      const lines = quiz.map((q, i) => {
+        const pick = picks[i];
+        const pickedLabel = q.options.find(o => o.value === pick?.picked)?.label ?? "—";
+        const correctIs = Array.isArray(q.correct)
+          ? q.options.filter(o => q.correct.includes(o.value)).map(o => o.label).join(" / ")
+          : q.options.find(o => o.value === q.correct)?.label;
+
+        return `
+          <div style="text-align:left; padding:10px 12px; border:1px solid rgba(0,0,0,.06); border-radius:14px; background:rgba(255,255,255,.6); margin:10px auto; max-width:740px;">
+            <div style="font-weight:800; margin-bottom:6px;">${i+1}. ${q.text}</div>
+            <div style="color:#6b4a5a;">Tu respuesta: <b>${pickedLabel}</b> ${pick?.correct ? "✅" : "❌"}</div>
+            <div style="color:#6b4a5a;">Correcta: <b>${correctIs}</b></div>
+          </div>
+        `;
+      }).join("");
+
+      reviewArea.innerHTML = lines;
+    }
+
+    restartBtn.addEventListener("click", () => {
+      idx = 0;
+      score = 0;
+      picks = [];
+      endCard.style.display = "none";
+      quizCard.style.display = "block";
+      reviewArea.style.display = "none";
+      reviewBtn.textContent = "Ver respuestas";
+      render();
+    });
+
+    reviewBtn.addEventListener("click", () => {
+      const showing = reviewArea.style.display === "block";
+      reviewArea.style.display = showing ? "none" : "block";
+      reviewBtn.textContent = showing ? "Ver respuestas" : "Ocultar respuestas";
+    });
+
+    // init
+    render();
+  </script>
 </body>
 </html>
-
